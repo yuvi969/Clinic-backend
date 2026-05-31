@@ -3,16 +3,15 @@ let io;
 const initSocket = (server) => {
   const { Server } = require("socket.io");
 
- io = new Server(server, {
+  io = new Server(server, {
   cors: {
-    origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.CLIENT_URL
-        : "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      process.env.CLIENT_URL,
+    ],
     credentials: true,
   },
 });
-
 
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
