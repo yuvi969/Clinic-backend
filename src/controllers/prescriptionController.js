@@ -3,6 +3,8 @@ const {
   sendEmail,
 } = require("../utils/emailService");
 
+const { getIO } = require("../socket/index");
+
 const createPrescription = async (req, res) => {
   try {
     const {
@@ -197,12 +199,21 @@ Thank you.
   );
 });
 
+
+
     res.status(201).json({
       message:
         "Prescription created successfully",
       prescription:
         prescriptionResult.rows[0],
     });
+
+    const io = getIO();
+
+io.emit("prescriptionCreated", {
+  appointment_id,
+});
+
 
   } catch (error) {
 
