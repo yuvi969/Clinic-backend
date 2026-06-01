@@ -1,5 +1,4 @@
-const nodemailer =
-  require("nodemailer");
+const nodemailer = require("nodemailer");
 
 const transporter =
   nodemailer.createTransport({
@@ -11,6 +10,8 @@ const transporter =
 
     requireTLS: true,
 
+    family: 4,
+
     auth: {
       user:
         process.env.EMAIL_USER,
@@ -19,7 +20,6 @@ const transporter =
         process.env.EMAIL_PASS,
     },
   });
-
 const sendEmail = async ({
   to,
   subject,
