@@ -1,6 +1,8 @@
 const pool = require("../db/index");
 const { getIO } = require("../socket");
-
+const { sendEmail } = require(
+  "../utils/emailService"
+);
 
 const bookAppointment = async (req, res) => {
 
@@ -14,6 +16,21 @@ const bookAppointment = async (req, res) => {
     const { slot_id, reason } = req.body;
 
     const user_id = req.user.id;
+
+    const userResult = await client.query(
+  `
+  SELECT name, email
+  FROM users
+  WHERE id = $1
+  `,
+  [user_id]
+);
+
+const patientName =
+  userResult.rows[0].name;
+
+const patientEmail =
+  userResult.rows[0].email;
 
     const patientResult = await client.query(
       `
@@ -93,6 +110,53 @@ const bookAppointment = async (req, res) => {
     );
 
     await client.query("COMMIT");
+    const doctorResult =
+  await client.query(
+    `
+    SELECT
+      u.name AS doctor_name
+    FROM doctors d
+    JOIN users u
+      ON d.user_id = u.id
+    WHERE d.id = $1
+    `,
+    [slot.doctor_id]
+  );
+
+  sendEmail({
+  to: patientEmail,
+
+  subject:
+    "Appointment Confirmed",
+
+  text: `
+Hello ${patientName},
+
+Your appointment has been booked successfully.
+
+Doctor:
+${doctorResult.rows[0].doctor_name}
+
+Token Number:
+${token_number}
+
+Reason:
+${reason}
+
+Date:
+${slot.slot_date}
+
+Time:
+${slot.start_time} - ${slot.end_time}
+
+Thank you.
+`,
+}).catch((err) => {
+  console.error(
+    "Email error:",
+    err
+  );
+});
 
          const io = getIO();
 

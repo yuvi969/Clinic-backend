@@ -10,6 +10,7 @@ const prescriptionRoutes = require(
   "./routes/prescriptionRoutes"
 );
 
+
 const profileRoutes = require(
   "./routes/profileRoutes"
 );
@@ -51,5 +52,10 @@ app.use(
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+app.use(
+  "/api/test",
+  testRoutes
+);
 
 module.exports = app;

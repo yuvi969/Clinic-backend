@@ -1,4 +1,7 @@
 const pool = require("../db/index");
+const {
+  sendEmail,
+} = require("../utils/emailService");
 
 const createPrescription = async (req, res) => {
   try {
@@ -133,6 +136,66 @@ const createPrescription = async (req, res) => {
           notes,
         ]
       );
+
+      const patientInfo =
+  await pool.query(
+    `
+    SELECT
+      users.name,
+      users.email
+    FROM patients
+    JOIN users
+      ON patients.user_id = users.id
+    WHERE patients.id = $1
+    `,
+    [appointment.patient_id]
+  );
+
+const doctorInfo =
+  await pool.query(
+    `
+    SELECT
+      users.name
+    FROM doctors
+    JOIN users
+      ON doctors.user_id = users.id
+    WHERE doctors.id = $1
+    `,
+    [doctor_id]
+  );
+
+const patientName =
+  patientInfo.rows[0].name;
+
+const patientEmail =
+  patientInfo.rows[0].email;
+
+const doctorName =
+  doctorInfo.rows[0].name;
+
+sendEmail({
+  to: patientEmail,
+
+  subject:
+    "Prescription Available",
+
+  text: `
+Hello ${patientName},
+
+Dr. ${doctorName} has created your prescription.
+
+You can view it securely by logging into the Clinic App:
+
+https://clinic-frontend-seven-vert.vercel.app/
+
+Thank you.
+`,
+}).catch((err) => {
+  console.error(
+    "Prescription email error:",
+    err
+  );
+});
 
     res.status(201).json({
       message:
