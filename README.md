@@ -62,3 +62,17 @@ Deployment:
 - Vercel
 - Render
 - Neon
+
+## Screenshots
+
+| Home Page | Patient Dashboard |
+|-----------|------------------|
+| ![](screenshots/homepage.png) | ![](screenshots/patient-dashboard.png) |
+
+| Doctor Dashboard | Profile |
+|------------------|---------|
+| ![](screenshots/doctor-dashboard.png) | ![](screenshots/profile.png) |
+
+| Prescription | Email Notification |
+|-------------|-------------------|
+| ![](screenshots/prescription.png) | ![](screenshots/appointmentmail.png) |
