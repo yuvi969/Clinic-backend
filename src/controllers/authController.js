@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const registerUser = async (req, res) => {
 
+
   const client = await pool.connect();
 
   try {
@@ -97,8 +98,12 @@ const registerUser = async (req, res) => {
 const jwt = require("jsonwebtoken");
 
 const loginUser = async (req, res) => {
+  console.log("Login started");
   try {
     const { email, password } = req.body;
+
+    console.log("Body parsed");
+    console.log(req.body);
 
     // Find user
     const userResult = await pool.query(
@@ -111,6 +116,7 @@ const loginUser = async (req, res) => {
         message: "Invalid credentials",
       });
     }
+    console.log("Query completed");
 
     const user = userResult.rows[0];
 
