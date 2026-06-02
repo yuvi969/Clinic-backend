@@ -8,7 +8,7 @@ const {
 const startReminderJob = () => {
 
   cron.schedule(
-    "* * * * *", // every minute for testing
+    "0 9 * * *", // every minute for testing
     async () => {
 
       try {
@@ -34,7 +34,7 @@ JOIN slots
   ON appointments.slot_id =
      slots.id
 WHERE DATE(slots.slot_date) =
-      CURRENT_DATE
+      CURRENT_DATE + 1
 AND appointments.reminder_sent = FALSE
 AND appointments.status = 'pending'
             `
