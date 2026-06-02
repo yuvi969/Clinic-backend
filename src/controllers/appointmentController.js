@@ -168,6 +168,9 @@ Thank you.
 sendEmail({
   to: doctorEmail,
 
+  subject:
+    "New Appointment Booked",
+
   text: `
 Hello Dr. ${doctorName},
 
