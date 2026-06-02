@@ -12,8 +12,7 @@ const sendEmail = async ({
 
   const response =
     await resend.emails.send({
-      from:
-        "onboarding@resend.dev",
+      from: "Shree Clinic <onboarding@resend.dev>",
 
       to,
 

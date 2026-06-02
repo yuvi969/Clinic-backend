@@ -114,7 +114,8 @@ const patientEmail =
   await client.query(
     `
     SELECT
-      u.name AS doctor_name
+      u.name AS doctor_name,
+      u.email AS doctor_email
     FROM doctors d
     JOIN users u
       ON d.user_id = u.id
@@ -122,6 +123,12 @@ const patientEmail =
     `,
     [slot.doctor_id]
   );
+
+  const doctorEmail =
+  doctorResult.rows[0].doctor_email;
+
+const doctorName =
+  doctorResult.rows[0].doctor_name;
 
   sendEmail({
   to: patientEmail,
@@ -154,6 +161,38 @@ Thank you.
 }).catch((err) => {
   console.error(
     "Email error:",
+    err
+  );
+});
+
+sendEmail({
+  to: doctorEmail,
+
+  text: `
+Hello Dr. ${doctorName},
+
+A new appointment has been booked.
+
+Patient:
+${patientName}
+
+Token Number:
+${token_number}
+
+Reason:
+${reason}
+
+Date:
+${slot.slot_date}
+
+Time:
+${slot.start_time} - ${slot.end_time}
+
+Please login to the Clinic App for details.
+`,
+}).catch((err) => {
+  console.error(
+    "Doctor email error:",
     err
   );
 });
